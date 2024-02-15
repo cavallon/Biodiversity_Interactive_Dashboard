@@ -1,4 +1,4 @@
-// create dynamic dropdown menu
+//populate the items in the dropdown
 function init() {
     let selector = d3.select("#selDataset");
   
@@ -14,37 +14,36 @@ function init() {
     })
 };
 
-// when dropdown is changed, 
-// volunteer demographics and charts are updated
+//allows charts to update when dropdown is changed
 function optionChanged(newSample) {
     buildMetadata(newSample);
     buildBarChart(newSample);
     buildBubbleChart(newSample);
 };
   
-// function to produce demographics table
+//code to produce demographics table
 function buildMetadata(sample) {
   d3.json("samples.json").then((data) => {
     let metadata = data.metadata;
     let resultArray = metadata.filter(sampleObj => sampleObj.id == sample);
     let result = resultArray[0];
-    let PANEL = d3.select("#sample-metadata");
+    let bubble = d3.select("#sample-metadata");
 
-    PANEL.html("");
+    bubble.html("");
     Object.entries(result).forEach(([key, value]) => {
-      PANEL.append("h6").text(key.toUpperCase() + ': ' + value);
+      bubble.append("h6").text(key.toUpperCase() + ': ' + value);
     });
   });
 };
 
-// function to produce the bar chart
+//create the bar chart
 function buildBarChart(sample){
   d3.json("samples.json").then((data) => {
     let samplesData = data.samples;
     let resultArray = samplesData.filter(sampleObj => sampleObj.id == sample);
     let result = resultArray[0];
 
-    // put all three arrays into dictionary format
+    // list to hold arrays and convert to dictionary
     let allSampleData = [];
 
     for (i = 0; i < result.otu_ids.length; i++) {
@@ -55,17 +54,17 @@ function buildBarChart(sample){
       });
     };
 
-    // for top ten results
+    // filter by top ten results
     let topTenResult = allSampleData.sort((a,b) => a.sample_values-b.sample_values).reverse().slice(0,10);
     
-    // vars for the bar chart
+    // bar chart variables
     let values = topTenResult.map(val=>val.sample_values);
-    let labels = topTenResult.map(lab=>"UTO "+lab.otu_ids);
+    let labels = topTenResult.map(lab=>"OTU "+lab.otu_ids);
     let hoverText = topTenResult.map(t=>t.otu_labels);
 
-    let PANEL = d3.select("#bar");
+    let bubble = d3.select("#bar");
 
-    PANEL.html("");
+    bubble.html("");
     let barData = {
       x: values,
       y: labels,
@@ -75,10 +74,10 @@ function buildBarChart(sample){
     };
 
     let layout = {
-      title: "Top 10 bacterial species (OTUs)",
+      title: "Top 10 OTUs",
       xaxis:{title: "Sample Values"},
       yaxis:{
-        title:"UTO IDs",
+        title:"OTU ID",
         autorange:'reversed'
       }
     };
@@ -87,20 +86,20 @@ function buildBarChart(sample){
   });
 };
 
-// function to produce the bubble chart
+// create bubble chart with function below
 function buildBubbleChart(sample){
   d3.json("samples.json").then((data) => {
     let samplesData = data.samples;
     let resultArray = samplesData.filter(sampleObj => sampleObj.id == sample);
     let result = resultArray[0];
-    // set the data arrays
+    // create arrays
     let values = result.sample_values;
     let ids = result.otu_ids;
     let labels = result.otu_labels;
 
-    let PANEL = d3.select("#bubble");
+    let bubble = d3.select("#bubble");
 
-    PANEL.html("");
+    bubble.html("");
     let bubbleTrace = {
       x: ids,
       y: values,
@@ -113,9 +112,9 @@ function buildBubbleChart(sample){
     };
     
     let bubbleLayout = {
-      title: "Bacterial species (OTU) Sample value",
-      xaxis:{title: "OTU ID"},
-      yaxis:{title: "Sample value"}
+      title: "OTU Sample values",
+      xaxis:{title: "OTU IDs"},
+      yaxis:{title: "Sample Values"}
     }
 
     Plotly.newPlot("bubble", [bubbleTrace], bubbleLayout);
@@ -125,33 +124,7 @@ function buildBubbleChart(sample){
 
 
 init();
-// initial loading for id 940
+//display default selection
 optionChanged(940);
 
 
-
-
-     //function buildMetadata(sample) {
-         //d3.json("https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json").then((data) => {
-//           // Filter the data for the object with the desired sample number
-
-
-//           // Use d3 to select the panel with id of #sample-metadata
-//           // Use `.html("") to clear any existing metadata
-//           // Hint: Inside the loop, you will need to use d3 to append new
-//           // tags for each key-value in the metadata.
-//         });
-//       }
-//       function buildCharts(sample) {
-//         d3.json("https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json").then((data) => {
-//           // write the code for charts
-//           // Build a Bubble Chart
-//       function init() {
-//         // Grab a reference to the dropdown select element
-//         // Use the list of sample names to populate the select options
-//         d3.json("https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json").then((data) => {
-//           // Use the first sample from the list to build the initial plots
-//       function optionChanged(newSample) {
-//         // Fetch new data each time a new sample is selected
-//       // Initialize the dashboard
-//       init();
