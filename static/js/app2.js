@@ -11,6 +11,9 @@ function init() {
           .text(sample)
           .property("value", sample);
       });
+    buildMetadata(sampleNames[0]);
+    buildBarChart(sampleNames[0]);
+    buildBubbleChart(sampleNames[0]);
     })
 };
 
@@ -124,7 +127,6 @@ function buildBubbleChart(sample){
 
 
 init();
-//display default selection
-optionChanged(940);
+
 
 
