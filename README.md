@@ -1,4 +1,4 @@
-Bellybutton Challenge ReadMe
+Belly Button Biodiversity Explorer: Interactive Dashboard
 
 # Summary:
 
